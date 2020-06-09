@@ -1,12 +1,12 @@
 #!/bin/bash
 
 #PROBLEMA 1
-#se almacenan en un array los archivos executionSummary.txt
+#se almacenan en un array los ficheros executionSummary.txt
 array=(`find . -name '*.txt' | sort | grep execution | grep -v '._'`)
 
 #podemos ver con
 #echo ${array[@]}
-# que nos almacenó todos los archivos executionSummary.txt en un array
+# que nos almacenó todos los ficheros executionSummary.txt en un array
 
 #eliminamos todo lo que contenga en el archivo sum.txt
 #ya que cada vez que ejecutamos el codigo guardaremos
@@ -19,7 +19,7 @@ cat /dev/null > metrics.txt
 #sacamos el min, el max, el promedio y el total de la suma
 cat sum.txt | awk 'BEGIN{min=9999999999; max=0}{ if($1<min){min=$1}; if($1>max){max=$1}; total+=$1; count+=1;} END{print total":"total/count":"min":"max}' >> metrics.txt
 
-#eliminamos todo lo que contenga sum.txt para volver a ocupar este archivo
+#eliminamos todo lo que contenga sum.txt para volver a ocupar este fichero
 rm sum.txt
 #recorremos el array y almacenamos en sum.txt las sumas de la memoria utilizada por todas las simulaciones
 for i in "${array[@]}"; do $i | chmod +x $i | cat $i | tail -n+2 | awk -F ':' 'BEGIN{sum=0}{sum=$10} END{print sum}' >> sum.txt ; done
