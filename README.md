@@ -1,8 +1,8 @@
-# Autor: Fabián Rozas Alfaro
+# Explicación del diseño de la solución
 
-# Correo: Fabian.rozas@alumnos.uv.cl
+Autor: Fabián Rozas Alfaro
 
-# Diseño de la solución 
+Correo: Fabian.rozas@alumnos.uv.cl
 
 Se utilizó el mismo diseño para el problema 1, 2 y 3. Debido que nos pedian buscar el total, promedio, el max y el min en cada uno de ellos. 
 
