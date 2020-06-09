@@ -6,7 +6,7 @@ Correo: Fabian.rozas@alumnos.uv.cl
 
 Se utilizó el mismo diseño para el problema 1, 2 y 3. Debido que nos pedian buscar el total, promedio, el max y el min en cada uno de ellos. 
 
-Primero que todo, se deben almacenar todos los archivos descargados de cada simulación en tres array distintos (uno para executionSummary-NNN.txt, otro para summary-NNN.txt, y otro para usePhone-NNN.txt). Después se recorren los array, buscando y realizando la sumas respectivas. 
+Primero que todo, se deben almacenar todos los archivos descargados de cada simulación en tres array distintos (uno para executionSummary-NNN.txt, otro para summary-NNN.txt, y otro para usePhone-NNN.txt). Después se recorren los array, buscando y realizando la sumas, o extracción de datos respectivos. 
 
 En el primer problema se buscan las sumas de timeExecMakeAgents + timeExecCal + timeExecSim en el array de executionSummary y se almacenan en un archivo. Luego para sacar el min, el max y el promedio entramos al nuevo archivo que almacena el tiempo de simulación total de cada uno. Finalmente al obtener el min, max, promedio y el total simulacion o la suma de todas las simulaciones, se almacenan en un archivo llamado metrics.txt y luego se elimina el archivo intermedio. 
 Ahora para sacar el min, max, promedio y total de la suma de la memoria por las simulaciones se utiliza el mismo diseño anterior, buscando y realizando las sumas en la columna que correspondan a la memoria. Para luego almacenar los resultados en el mismo archivo metrics.txt y eliminar los intermedios. 
