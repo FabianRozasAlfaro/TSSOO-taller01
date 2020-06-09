@@ -19,6 +19,14 @@ cat /dev/null > metrics.txt
 #sacamos el min, el max, el promedio y el total de la suma
 cat sum.txt | awk 'BEGIN{min=9999999999; max=0}{ if($1<min){min=$1}; if($1>max){max=$1}; total+=$1; count+=1;} END{print total":"total/count":"min":"max}' >> metrics.txt
 
+#eliminamos todo lo que contenga sum.txt para volver a ocupar este archivo
+rm sum.txt
+#recorremos el array y almacenamos en sum.txt las sumas de la memoria utilizada por todas las simulaciones
+for i in "${array[@]}"; do $i | chmod +x $i | cat $i | tail -n+2 | awk -F ':' 'BEGIN{sum=0}{sum=$10} END{print sum}' >> sum.txt ; done
+
+#sacamos el min, el max, el promedio y el total de la suma de  memoria utilizada por todas las simulaciones
+cat sum.txt | awk 'BEGIN{min=9999999999; max=0}{ if($1<min){min=$1}; if($1>max){max=$1}; total+=$1; count+=1;} END{print total":"total/count":"min":"max}' >> metrics.txt
+
 #mostramos los resultados 
 more metrics.txt
 
