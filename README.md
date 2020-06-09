@@ -1,11 +1,8 @@
-# TSSOO-taller01
+# Autor: Fabián Rozas Alfaro
 
-Autor: Fabián Rozas Alfaro
+# Correo: Fabian.rozas@alumnos.uv.cl
 
-Correo: Fabian.rozas@alumnos.uv.cl
-
-
-Diseño de la solución: 
+# Diseño de la solución 
 
 Se utilizó el mismo diseño para el problema 1, 2 y 3. Debido que nos pedian buscar el total, promedio, el max y el min en cada uno de ellos. 
 
