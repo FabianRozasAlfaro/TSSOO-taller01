@@ -1,7 +1,7 @@
 # TSSOO-taller01
 
 Autor: Fabián Rozas Alfaro
-correo: Fabian.rozas@alumnos.uv.cl
+Correo: Fabian.rozas@alumnos.uv.cl
 
 
 Diseño de la solución: 
