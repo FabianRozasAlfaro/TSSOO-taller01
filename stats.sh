@@ -1,37 +1,115 @@
 #!/bin/bash
 
-#PROBLEMA 1
+############# PROBLEMA 1 ###################
+echo PROBLEMA 1
 #se almacenan en un array los archivos executionSummary.txt
-array=(`find . -name '*.txt' | sort | grep execution | grep -v '._'`)
+array=(`find . -name '*.txt' -print | sort | grep execution | grep -v '._'`)
 
-#podemos ver con
-#echo ${array[@]}
-# que nos almacenó todos los archivos executionSummary.txt en un array
+#se recorre el array y se almacenan las sumas en sum.txt
+for i in "${array[@]}"; do cat $i | grep -v $i | tail -n+2 | awk -F ':' 'BEGIN{sum=0}{sum=$6+$7+$8} END{print sum}' >> sum.txt; done
 
-#eliminamos todo lo que contenga en el archivo sum.txt
-#ya que cada vez que ejecutamos el codigo guardaremos
-cat /dev/null > sum.txt
-#ahora recorremos este array y almacenamos las sumas en sum.txt
-for i in "${array[@]}"; do $i | chmod +x $i | cat $i | tail -n+2 | awk -F ':' 'BEGIN{sum=0}{sum=$6+$7+$8} END{print sum}' >> sum.txt; done
-
-#eliminamos lo que contenga metricts.txt por la misma razon de sum.txt
-cat /dev/null > metrics.txt
+#eliminamos lo que contenga metricts.txt para que no se guarde todo cada vez que ejecutamos
+rm metrics.txt
 #########
-echo tsimTotal:promedio:min:max >> metrics.txt
-#sacamos el min, el max, el promedio y el total de la suma
-cat sum.txt | awk 'BEGIN{min=9999999999; max=0}{ if($1<min){min=$1}; if($1>max){max=$1}; total+=$1; count+=1;} END{print total":"total/count":"min":"max}' >> metrics.txt
+
+#sacamos el min, el max, el promedio y el total de la suma y se almacena en metrics.txt
+cat sum.txt | awk 'BEGIN{min=9999999999; max=0}{ if($1<min){min=$1}; if($1>max){max=$1}; total+=$1; count+=1;} END{print "tsimTotal:"total/count":"min":"max}' >> metrics.txt
 
 #eliminamos todo lo que contenga sum.txt para volver a ocupar este archivo
 rm sum.txt
 #recorremos el array y almacenamos en sum.txt las sumas de la memoria utilizada por todas las simulaciones
-for i in "${array[@]}"; do $i | chmod +x $i | cat $i | tail -n+2 | awk -F ':' 'BEGIN{sum=0}{sum=$10} END{print sum}' >> sum.txt ; done
+for i in "${array[@]}"; do cat $i | grep -v $i | tail -n+2 | awk -F ':' 'BEGIN{sum=0}{sum=$10} END{print sum}' >> sum.txt ; done
 
-echo memUsed:promedio:min:max >> metrics.txt
 #sacamos el min, el max, el promedio y el total de la suma de  memoria utilizada por todas las simulaciones
-cat sum.txt | awk 'BEGIN{min=9999999999; max=0}{ if($1<min){min=$1}; if($1>max){max=$1}; total+=$1; count+=1;} END{print total":"total/count":"min":"max}' >> metrics.txt
+cat sum.txt | awk 'BEGIN{min=9999999999; max=0}{ if($1<min){min=$1}; if($1>max){max=$1}; total+=$1; count+=1;} END{print "memUsed:"total/count":"min":"max}' >> metrics.txt
 
-#mostramos los resultados
+#se muestran resultados
 more metrics.txt
-#eliminamos todos los archivos intermedios
+#se eliminan los archivos intermedios
+rm sum.txt
+
+
+
+########### PROBLEMA 2 ###################
+echo PROBLEMA 2
+
+array2=(`find . -name '*.txt' -print | sort | grep summary | grep -v '._'`)
+
+#alls
+for i in "${array2[@]}"; do cat $i | grep -v $i | tail -n+2 | awk -F ':' 'BEGIN{sum=0; min=9999999999; max=0}{sum+=$8; count+=1; if($8<min && $8!=0){min=$8}; if($8>max){max=$8}}END{print sum":"count":"min":"max}' >> sum.txt; done
+
+rm evacuation.txt
+cat sum.txt | awk -F ':' 'BEGIN{min=9999999999; max=0}{ if($3<min){min=$3}; if($4>max){max=$4}; total+=$1; count+=$2} END{print "alls:"total/count":"min":"max}' >> evacuation.txt
+
+rm sum.txt
+
+#residents
+for i in "${array2[@]}"; do cat $i | grep -v $i | tail -n+2 | awk -F ':' 'BEGIN{sum=0; min=9999999999; max=0}{if($3==0){sum+=$8; count+=1; if($8<min && $8!=0){min=$8};if($8>max){max=$8}}}END{print sum":"count":"min":"max}' >> sum.txt; done
+
+cat sum.txt | awk -F ':' 'BEGIN{min=9999999999; max=0}{ if($3<min){min=$3}; if($4>max){max=$4}; total+=$1; count+=$2} END{print "residents:"total/count":"min":"max}' >> evacuation.txt
+
+rm sum.txt
+
+#visitorsI
+for i in "${array2[@]}"; do cat $i | grep -v $i | tail -n+2 | awk -F ':' 'BEGIN{sum=0; min=9999999999; max=0}{if($3==1){sum+=$8; count+=1; if($8<min && $8!=0){min=$8};if($8>max){max=$8}}}END{print sum":"count":"min":"max}' >> sum.txt ;done
+
+cat sum.txt | awk -F ':' 'BEGIN{min=9999999999; max=0}{ if($3<min){min=$3}; if($4>max){max=$4}; total+=$1; count+=$2} END{print "visitorsI:"total/count":"min":"max}' >> evacuation.txt
+
+rm sum.txt
+
+#residents-G0
+for i in "${array2[@]}"; do cat $i | grep -v $i | tail -n+2 | awk -F ':' 'BEGIN{sum=0; min=9999999999; max=0}{if($3==0 && $4==0){sum+=$8; count+=1; if($8<min && $8!=0){min=$8};if($8>max){max=$8}}} END{print sum":"count":"min":"max}' >> sum.txt ;done
+
+cat sum.txt | awk -F ':' 'BEGIN{min=9999999999; max=0}{ if($3<min){min=$3}; if($4>max){max=$4}; total+=$1; count+=$2} END{print "residents-G0:"total/count":"min":"max}' >> evacuation.txt
+
+rm sum.txt
+
+#residents-G1
+for i in "${array2[@]}"; do cat $i | grep -v $i | tail -n+2 | awk -F ':' 'BEGIN{sum=0; min=9999999999; max=0}{if($3==0 && $4==1){sum+=$8; count+=1; if($8<min && $8!=0){min=$8};if($8>max){max=$8}}} END{print sum":"count":"min":"max}' >> sum.txt ;done
+
+cat sum.txt | awk -F ':' 'BEGIN{min=9999999999; max=0}{ if($3<min){min=$3}; if($4>max){max=$4}; total+=$1; count+=$2} END{print "residents-G1:"total/count":"min":"max}' >> evacuation.txt
+
+rm sum.txt
+
+#residents-G2
+for i in "${array2[@]}"; do cat $i | grep -v $i | tail -n+2 | awk -F ':' 'BEGIN{sum=0; min=9999999999; max=0}{if($3==0 && $4==2){sum+=$8; count+=1; if($8<min && $8!=0){min=$8};if($8>max){max=$8}}} END{print sum":"count":"min":"max}' >> sum.txt ;done
+
+cat sum.txt | awk -F ':' 'BEGIN{min=9999999999; max=0}{ if($3<min){min=$3}; if($4>max){max=$4}; total+=$1; count+=$2} END{print "residents-G2:"total/count":"min":"max}' >> evacuation.txt
+
+rm sum.txt
+
+#residents-G3
+for i in "${array2[@]}"; do cat $i | grep -v $i | tail -n+2 | awk -F ':' 'BEGIN{sum=0; min=9999999999; max=0}{if($3==0 && $4==3){sum+=$8; count+=1; if($8<min && $8!=0){min=$8};if($8>max){max=$8}}} END{print sum":"count":"min":"max}' >> sum.txt ;done
+
+cat sum.txt | awk -F ':' 'BEGIN{min=9999999999; max=0}{ if($3<min){min=$3}; if($4>max){max=$4}; total+=$1; count+=$2} END{print "residents-G3:"total/count":"min":"max}' >> evacuation.txt
+rm sum.txt
+
+#visitorsI-G0
+for i in "${array2[@]}"; do cat $i | grep -v $i | tail -n+2 | awk -F ':' 'BEGIN{sum=0; min=9999999999; max=0}{if($3==1 && $4==0){sum+=$8; count+=1; if($8<min && $8!=0){min=$8};if($8>max){max=$8}}} END{print sum":"count":"min":"max}' >> sum.txt ;done
+
+cat sum.txt | awk -F ':' 'BEGIN{min=9999999999; max=0}{ if($3<min){min=$3}; if($4>max){max=$4}; total+=$1; count+=$2} END{print "visitorsI-G0:"total/count":"min":"max}' >> evacuation.txt
+
+rm sum.txt
+
+#visitorsI-G1
+for i in "${array2[@]}"; do cat $i | grep -v $i | tail -n+2 | awk -F ':' 'BEGIN{sum=0; min=9999999999; max=0}{if($3==1 && $4==1){sum+=$8; count+=1; if($8<min && $8!=0){min=$8};if($8>max){max=$8}}} END{print sum":"count":"min":"max}' >> sum.txt ;done
+
+cat sum.txt | awk -F ':' 'BEGIN{min=9999999999; max=0}{ if($3<min){min=$3}; if($4>max){max=$4}; total+=$1; count+=$2} END{print "visitorsI-G1:"total/count":"min":"max}' >> evacuation.txt
+
+rm sum.txt
+
+#visitorsI-G2
+for i in "${array2[@]}"; do cat $i | grep -v $i | tail -n+2 | awk -F ':' 'BEGIN{sum=0; min=9999999999; max=0}{if($3==1 && $4==2){sum+=$8; count+=1; if($8<min && $8!=0){min=$8};if($8>max){max=$8}}} END{print sum":"count":"min":"max}' >> sum.txt ;done
+
+cat sum.txt | awk -F ':' 'BEGIN{min=9999999999; max=0}{ if($3<min){min=$3}; if($4>max){max=$4}; total+=$1; count+=$2} END{print "visitorsI-G2:"total/count":"min":"max}' >> evacuation.txt
+
+rm sum.txt
+
+#visitorsI-G3
+for i in "${array2[@]}"; do cat $i | grep -v $i | tail -n+2 | awk -F ':' 'BEGIN{sum=0; min=9999999999; max=0}{if($3==1 && $4==3){sum+=$8; count+=1; if($8<min && $8!=0){min=$8};if($8>max){max=$8}}} END{print sum":"count":"min":"max}' >> sum.txt ;done
+
+cat sum.txt | awk -F ':' 'BEGIN{min=9999999999; max=0}{ if($3<min){min=$3}; if($4>max){max=$4}; total+=$1; count+=$2} END{print "visitorsI-G3:"total/count":"min":"max}' >> evacuation.txt
+
+more evacuation.txt
 rm sum.txt
 
