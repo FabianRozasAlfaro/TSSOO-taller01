@@ -8,7 +8,9 @@ El diseño consiste básicamente en el análisis y posterior funcionamiento del 
 Los problemas son los siguientes:
 
 •	Problema 1: Se necesita el tiempo de simulación y la memoria utilizada por la simulación.
+
 •	Problema 2: Se necesitan los cálculos de todas las personas simuladas, Residentes, Visitantes tipo I, Residentes separados por grupo etario y Visitantes tipo I separados por grupo etario.
+
 •	Problema 3: Se necesita el cálculo del úso de teléfonos en el instate de tiempo específico.
 
 Se utilizó un diseño similar para los 3 problemas, puesto que se pide buscar el total de estos datos y poder calcular el promedio, max y el min en cada uno de ellos.
