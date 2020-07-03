@@ -113,3 +113,28 @@ cat sum.txt | awk -F ':' 'BEGIN{min=9999999999; max=0}{ if($3<min){min=$3}; if($
 more evacuation.txt
 rm sum.txt
 
+########### PROBLEMA 3 ###########
+echo "PROBLEMA 3"
+
+array3=(`find . -name '*.txt' -print | sort | grep usePhone | grep -v '._'`)
+
+printf "timestamp:prom:min:max\n" >> $usePhoneOutFile
+
+for i in ${array3[@]};
+do
+        timeStamp=(`cat $i | tail -n+3 | cut -d ':' -f 2`)
+        usePhone=(`cat $i | tail -n+3 | cut -d ':' -f 3`)
+
+        for j in ${timeStamp[@]};
+        do
+                printf "%d:\n" $j >> $tmpStamp
+                timeStampStats=$(cat $tmpStampe | awk -F ':' 'BEGIN{min=999999; max=0}{if($j<min){min=$j};if($j>max){max=$j}{total+=$j; count+=1;} END {print total/count":"min":"max}')
+        done
+
+        echo "%i : %i\n" $timeStamp $timeStampStats >> usePhone-stats.txt
+        rm -f $tmpUsePhone
+        rm -f $tmpStampPhone
+done
+
+more usePhone-stats.txt
+
